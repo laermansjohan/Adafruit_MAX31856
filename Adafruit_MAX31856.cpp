@@ -156,6 +156,39 @@ max31856_thermocoupletype_t Adafruit_MAX31856::getThermocoupleType(void) {
 
 /**************************************************************************/
 /*!
+    @brief  Set the number of samples to average for the temperature measurement.
+            Higher values provide smoother readings but increase measurement time.
+    @param  numSamples The number of samples to average. Valid options are:
+                       1, 2, 4, 8, or 16.
+                       If an invalid value is passed, the function does nothing.
+*/
+/**************************************************************************/
+void Adafruit_MAX31856::setAveraging(uint8_t numSamples) {
+  uint8_t value = readRegister8(MAX31856_CR0_REG);
+
+  // Clear FILTER_SEL bits (bits 5–7)
+  value &= ~(0b111 << 5);
+
+  // Determine the correct bit value for the given number of samples
+  uint8_t setting = 0;
+  switch (numSamples) {
+    case 1:  setting = 0b000; break;
+    case 2:  setting = 0b001; break;
+    case 4:  setting = 0b010; break;
+    case 8:  setting = 0b011; break;
+    case 16: setting = 0b100; break;
+    default: return; // Invalid number of samples — do nothing
+  }
+
+  // Set the new FILTER_SEL bits
+  value |= (setting << 5);
+  writeRegister8(MAX31856_CR0_REG, value);
+}
+
+
+
+/**************************************************************************/
+/*!
     @brief  Read the fault register (8 bits)
     @returns 8 bits of fault register data
 */
