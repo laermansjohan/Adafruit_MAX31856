@@ -119,6 +119,7 @@ public:
   max31856_conversion_mode_t getConversionMode(void);
 
   void setThermocoupleType(max31856_thermocoupletype_t type);
+  void setAveraging(uint8_t numSamples);
   max31856_thermocoupletype_t getThermocoupleType(void);
 
   uint8_t readFault(void);
